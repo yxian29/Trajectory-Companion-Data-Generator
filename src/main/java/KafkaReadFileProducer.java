@@ -21,6 +21,8 @@ public class KafkaReadFileProducer {
     private KafkaReadFileProducer(Builder builder) {
         this.kafkaHostname = builder.kafkaHostname;
         this.kafkaPort = builder.kafkaPort;
+        this.topic = builder.topic;
+        this.inputFileName = builder.inputFileName;
     }
 
     public String getKafkaHostname() {
