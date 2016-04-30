@@ -18,6 +18,7 @@ public class KafkaReadFileProducerCli {
                 .setKafkaHostname(propertyParser.getProperty(Config.KAFKA_HOSTNAME_KEY))
                 .setKafkaPort(Integer.parseInt(propertyParser.getProperty(Config.KAFKA_PORT_KEY)))
                 .setTopic(propertyParser.getProperty(Config.KAFKA_TOPIC_KEY))
+                .setMessageRate(Long.parseLong(propertyParser.getProperty(Config.KAFKA_PRDOUCER_MESSAGE_RATE)))
                 .setInputFileName(args[1])
                 .build();
 

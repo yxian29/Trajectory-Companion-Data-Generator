@@ -17,12 +17,14 @@ public class KafkaReadFileProducer {
     private Integer kafkaPort;
     private String topic;
     private String inputFileName;
+    private long messageRate;
 
     private KafkaReadFileProducer(Builder builder) {
         this.kafkaHostname = builder.kafkaHostname;
         this.kafkaPort = builder.kafkaPort;
         this.topic = builder.topic;
         this.inputFileName = builder.inputFileName;
+        this.messageRate = builder.messageRate;
     }
 
     public String getKafkaHostname() {
@@ -46,6 +48,7 @@ public class KafkaReadFileProducer {
         private Integer kafkaPort;
         private String topic;
         private String inputFileName;
+        private long messageRate = 0l;
 
         public Builder setKafkaHostname(String kafkaHostname) {
             this.kafkaHostname = kafkaHostname;
@@ -67,13 +70,18 @@ public class KafkaReadFileProducer {
             return this;
         }
 
+        public Builder setMessageRate(long messageRate) {
+            this.messageRate = messageRate;
+            return this;
+        }
+
         public KafkaReadFileProducer build() {
             KafkaReadFileProducer producer = new KafkaReadFileProducer(this);
             return producer;
         }
     }
 
-    public void produceMessages() {
+    public void produceMessages() throws Exception{
 
         // Setup the Kafka Producer
         Properties props = new Properties();
@@ -90,7 +98,7 @@ public class KafkaReadFileProducer {
                 KeyedMessage<String, String> data = new KeyedMessage<String, String>(getTopic(), null, line);
                 producer.send(data);
                 System.out.println(line);
-                //Thread.sleep(200l);
+                Thread.sleep(messageRate);
                 line = br.readLine();
             }
         } catch (IOException e) {

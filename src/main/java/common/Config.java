@@ -16,6 +16,7 @@ public class Config {
     public static final String KAFKA_HOSTNAME_KEY = "kafka.hostname";
     public static final String KAFKA_PORT_KEY = "kafka.port";
     public static final String KAFKA_TOPIC_KEY = "kafka.topic";
+    public static final String KAFKA_PRDOUCER_MESSAGE_RATE = "kafka.producer.messagerate";
 
     // Kafka Test
     public static final String KAFKA_TEST_MESSAGE_COUNT_KEY = "kafka.test.message.count";
