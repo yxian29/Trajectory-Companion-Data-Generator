@@ -31,6 +31,13 @@
         </developer>
     </developers>
 
+    <repositories>
+        <repository>
+            <id>cloudera-repos</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+        </repository>
+    </repositories>
+
     <profiles>
         <profile>
             <id>build-with-dependencies</id>
@@ -91,6 +98,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cloudera.spark.streaming.kafka</groupId>
+            <artifactId>spark-kafka-writer</artifactId>
+            <version>0.1.0</version>
         </dependency>
     </dependencies>
 

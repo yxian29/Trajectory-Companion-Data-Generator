@@ -1,108 +1,27 @@
-import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
-import kafka.producer.ProducerConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Properties;
-
+import common.Config;
+import common.PropertyFileParser;
 
 public class KafkaReadFileProducer {
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaReadFileProducer.class);
 
-    private String kafkaHostname;
-    private Integer kafkaPort;
-    private String topic;
-    private String inputFileName;
-    private long messageRate;
-
-    private KafkaReadFileProducer(Builder builder) {
-        this.kafkaHostname = builder.kafkaHostname;
-        this.kafkaPort = builder.kafkaPort;
-        this.topic = builder.topic;
-        this.inputFileName = builder.inputFileName;
-        this.messageRate = builder.messageRate;
-    }
-
-    public String getKafkaHostname() {
-        return kafkaHostname;
-    }
-
-    public Integer getKafkaPort() {
-        return kafkaPort;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public String getInputFileName() {
-        return inputFileName;
-    }
-
-    public static class Builder {
-        private String kafkaHostname;
-        private Integer kafkaPort;
-        private String topic;
-        private String inputFileName;
-        private long messageRate = 0l;
-
-        public Builder setKafkaHostname(String kafkaHostname) {
-            this.kafkaHostname = kafkaHostname;
-            return this;
+    public static void main(String[] args) throws Exception {
+        if(args.length < 2) {
+            System.err.println("USAGE: <propsfile> <inputfile> [debug]");
+            System.exit(1);
         }
 
-        public Builder setKafkaPort(Integer kafkaPort) {
-            this.kafkaPort = kafkaPort;
-            return this;
-        }
+        // Setup the property parser
+        PropertyFileParser propertyParser = new PropertyFileParser(args[0]);
+        propertyParser.parseFile();
 
-        public Builder setTopic(String topic) {
-            this.topic = topic;
-            return this;
-        }
+        // Producer
+        KafkaReadFileProc kafkaReadfileProc = new KafkaReadFileProc.Builder()
+                .setKafkaHostname(propertyParser.getProperty(Config.KAFKA_HOSTNAME_KEY))
+                .setKafkaPort(Integer.parseInt(propertyParser.getProperty(Config.KAFKA_PORT_KEY)))
+                .setTopic(propertyParser.getProperty(Config.KAFKA_TOPIC_KEY))
+                .setMessageRate(Long.parseLong(propertyParser.getProperty(Config.KAFKA_PRDOUCER_MESSAGE_RATE)))
+                .setInputFileName(args[1])
+                .build();
 
-        public Builder setInputFileName(String inputFileName) {
-            this.inputFileName = inputFileName;
-            return this;
-        }
-
-        public Builder setMessageRate(long messageRate) {
-            this.messageRate = messageRate;
-            return this;
-        }
-
-        public KafkaReadFileProducer build() {
-            KafkaReadFileProducer producer = new KafkaReadFileProducer(this);
-            return producer;
-        }
-    }
-
-    public void produceMessages() throws Exception{
-
-        // Setup the Kafka Producer
-        Properties props = new Properties();
-        props.put("metadata.broker.list", getKafkaHostname() + ":" + getKafkaPort());
-        props.put("serializer.class", "kafka.serializer.StringEncoder");
-        ProducerConfig config = new ProducerConfig(props);
-        Producer<String, String> producer = new Producer<String, String>(config);
-
-        // Read each line from the file and send via the producer
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(getInputFileName()));
-            String line = br.readLine();
-            while (line != null) {
-                KeyedMessage<String, String> data = new KeyedMessage<String, String>(getTopic(), null, line);
-                producer.send(data);
-                System.out.println(line);
-                Thread.sleep(messageRate);
-                line = br.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        kafkaReadfileProc.produceMessages();
     }
 }
