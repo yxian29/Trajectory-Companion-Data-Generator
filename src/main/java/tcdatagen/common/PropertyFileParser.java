@@ -33,26 +33,14 @@ public class PropertyFileParser {
     }
 
     public void parseFile() throws Exception {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
-
+        File file = new File(propFileName);
+        InputStream inputStream = new FileInputStream(file);
         try {
-            if(inputStream != null) {
-                props.load(inputStream);
-            } else {
-                throw new IOException("failed to load property file");
-            }
+            props.load(inputStream);
         } catch (IOException ex) {
             LOG.error(ex.getMessage());
             ex.printStackTrace();
-            try {
-                File file = new File(propFileName);
-                inputStream = new FileInputStream(file.getAbsolutePath());
-                props.load(inputStream);
-            } catch (IOException ex1) {
-                LOG.error("failed to load property file");
-                ex1.printStackTrace();
-                throw ex1;
-            }
+            throw new IOException("failed to load property file");
         }
     }
 

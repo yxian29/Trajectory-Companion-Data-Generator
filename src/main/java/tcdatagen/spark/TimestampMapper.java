@@ -9,7 +9,7 @@ public class TimestampMapper implements PairFunction<String, Integer, String> {
         String[] split = s.split(",");
         Integer timestamp = 0;
         if(split[3].contains(":")) { // assuming HH:mm format
-
+            timestamp = toSeconds(split[3]);
         }
         else { // assuming integer format
             timestamp = Integer.parseInt(split[3]);

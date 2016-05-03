@@ -8,4 +8,4 @@
 #kafka.hostname=localhost
 #kafka.port=9092
 #kafka.topic=mytopic
-#kafka.producer.messagerate=0
+#kafka.producer.messagerate=100
