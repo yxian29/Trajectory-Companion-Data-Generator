@@ -1,0 +1,11 @@
+
+# Zookeeper
+#zookeeper.host=127.0.0.1
+#zookeeper.port=2181
+#zookeeper.connection.string=127.0.0.1:2181
+
+# Kafka
+#kafka.hostname=localhost
+#kafka.port=9092
+#kafka.topic=mytopic
+#kafka.producer.messagerate=0
