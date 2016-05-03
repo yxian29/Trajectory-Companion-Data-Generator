@@ -1,4 +1,4 @@
-package common;
+package tcdatagen.common;
 
 public class Config {
     // Props file

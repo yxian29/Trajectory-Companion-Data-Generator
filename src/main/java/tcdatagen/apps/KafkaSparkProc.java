@@ -1,3 +1,5 @@
+package tcdatagen.apps;
+
 import kafka.producer.KeyedMessage;
 import org.apache.spark.api.java.function.Function;
 
